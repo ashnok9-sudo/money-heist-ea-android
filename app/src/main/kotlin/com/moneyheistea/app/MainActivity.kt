@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
 
         webView = findViewById(R.id.webView)
         swipeRefresh = findViewById(R.id.swipeRefresh)
+        swipeRefresh.isEnabled = false // Disable pull-to-refresh so app behaves like native mobile app
         progressBar = findViewById(R.id.progressBar)
         errorLayout = findViewById(R.id.errorLayout)
         errorText = findViewById(R.id.errorText)
@@ -83,6 +84,7 @@ class MainActivity : AppCompatActivity() {
         settings.cacheMode = WebSettings.LOAD_DEFAULT
         settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
         settings.userAgentString = settings.userAgentString + " MoneyHeistEA-AndroidApp/1.0"
+        webView.overScrollMode = View.OVER_SCROLL_NEVER
 
         webView.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -132,9 +134,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        swipeRefresh.setOnRefreshListener {
-            loadUrl(currentUrl)
-        }
+        // Pull-to-refresh intentionally disabled to maintain native mobile app feel
+        swipeRefresh.isEnabled = false
 
         retryButton.setOnClickListener {
             errorLayout.visibility = View.GONE
