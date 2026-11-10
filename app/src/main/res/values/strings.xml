@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Money Heist EA</string>
+    <string name="default_server_url">http://192.168.1.101:8000</string>
+    <string name="server_settings">Server Settings</string>
+    <string name="enter_server_url">Enter Money Heist EA Server URL:</string>
+    <string name="save">Connect</string>
+    <string name="cancel">Cancel</string>
+    <string name="connection_error">Unable to connect to Money Heist server. Please check that the server is running and your URL is correct.</string>
+</resources>
