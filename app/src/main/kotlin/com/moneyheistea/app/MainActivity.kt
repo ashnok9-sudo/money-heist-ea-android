@@ -7,6 +7,8 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.webkit.ValueCallback
+import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
@@ -18,6 +20,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -31,6 +34,20 @@ class MainActivity : AppCompatActivity() {
     private lateinit var errorText: TextView
     private lateinit var retryButton: Button
     private lateinit var changeUrlButton: Button
+
+    private var filePathCallback: ValueCallback<Array<Uri>>? = null
+
+    private val fileChooserLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val uris = WebChromeClient.FileChooserParams.parseResult(result.resultCode, result.data)
+            filePathCallback?.onReceiveValue(uris)
+        } else {
+            filePathCallback?.onReceiveValue(null)
+        }
+        filePathCallback = null
+    }
 
     private val prefs by lazy {
         getSharedPreferences("MoneyHeistEAPrefs", Context.MODE_PRIVATE)
@@ -129,6 +146,38 @@ class MainActivity : AppCompatActivity() {
                         false
                     }
                 }
+            }
+        }
+
+        webView.webChromeClient = object : WebChromeClient() {
+            override fun onShowFileChooser(
+                webView: WebView?,
+                filePathCallback: ValueCallback<Array<Uri>>?,
+                fileChooserParams: FileChooserParams?
+            ): Boolean {
+                this@MainActivity.filePathCallback?.onReceiveValue(null)
+                this@MainActivity.filePathCallback = filePathCallback
+
+                var intent = fileChooserParams?.createIntent()
+                if (intent == null) {
+                    intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                        type = "image/*"
+                        addCategory(Intent.CATEGORY_OPENABLE)
+                    }
+                } else if (!fileChooserParams.acceptTypes.isNullOrEmpty() && fileChooserParams.acceptTypes[0].isNotEmpty()) {
+                    intent.type = fileChooserParams.acceptTypes[0]
+                } else {
+                    intent.type = "image/*"
+                }
+
+                try {
+                    fileChooserLauncher.launch(Intent.createChooser(intent, "Select Chart Screenshot"))
+                } catch (e: Exception) {
+                    this@MainActivity.filePathCallback?.onReceiveValue(null)
+                    this@MainActivity.filePathCallback = null
+                    return false
+                }
+                return true
             }
         }
     }
