@@ -79,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         settings.allowContentAccess = true
         settings.useWideViewPort = true
         settings.loadWithOverviewMode = true
+        settings.mediaPlaybackRequiresUserGesture = false
         settings.cacheMode = WebSettings.LOAD_DEFAULT
         settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
         settings.userAgentString = settings.userAgentString + " MoneyHeistEA-AndroidApp/1.0"
