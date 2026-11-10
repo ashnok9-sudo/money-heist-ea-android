@@ -159,13 +159,14 @@ class MainActivity : AppCompatActivity() {
                 this@MainActivity.filePathCallback = filePathCallback
 
                 var intent = fileChooserParams?.createIntent()
+                val acceptTypes = fileChooserParams?.acceptTypes
                 if (intent == null) {
                     intent = Intent(Intent.ACTION_GET_CONTENT).apply {
                         type = "image/*"
                         addCategory(Intent.CATEGORY_OPENABLE)
                     }
-                } else if (!fileChooserParams.acceptTypes.isNullOrEmpty() && fileChooserParams.acceptTypes[0].isNotEmpty()) {
-                    intent.type = fileChooserParams.acceptTypes[0]
+                } else if (acceptTypes != null && acceptTypes.isNotEmpty() && acceptTypes[0].isNotEmpty()) {
+                    intent.type = acceptTypes[0]
                 } else {
                     intent.type = "image/*"
                 }
