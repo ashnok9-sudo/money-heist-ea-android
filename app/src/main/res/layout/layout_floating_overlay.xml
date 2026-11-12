@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/overlayRoot"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <!-- FLOATING EXPANDED QUOTES WINDOW -->
+    <LinearLayout
+        android:id="@+id/quotesWindow"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_floating_window"
+        android:padding="14dp"
+        android:visibility="gone">
+
+        <!-- Top Header Row -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <ImageView
+                android:id="@+id/headerAvatar"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:src="@drawable/heist_icon"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="Avatar" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_toEndOf="@id/headerAvatar"
+                android:layout_toStartOf="@+id/btnCloseQuotes"
+                android:layout_marginStart="10dp"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:id="@+id/txtBotTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MONEY HEIST EA"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtStatusPill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🟢 SCANNING MARKETS"
+                    android:textColor="#10B981"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/btnCloseQuotes"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="✕"
+                android:textColor="#94A3B8"
+                android:textSize="16sp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true" />
+        </RelativeLayout>
+
+        <!-- Quick Controls Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp"
+            android:weightSum="3">
+
+            <Button
+                android:id="@+id/btnOverlayScript"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_weight="1"
+                android:text="SCRIPT"
+                android:textColor="#CBD5E1"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:backgroundTint="#1E293B"
+                android:layout_marginEnd="4dp"
+                android:padding="0dp" />
+
+            <Button
+                android:id="@+id/btnOverlayLive"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_weight="1"
+                android:text="LIVE"
+                android:textColor="#CBD5E1"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:backgroundTint="#1E293B"
+                android:layout_marginEnd="4dp"
+                android:padding="0dp" />
+
+            <Button
+                android:id="@+id/btnOverlayToggle"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_weight="1"
+                android:text="STOP EA"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:backgroundTint="#E50914"
+                android:padding="0dp" />
+        </LinearLayout>
+
+        <!-- Monospace Live Terminal Box -->
+        <ScrollView
+            android:id="@+id/scrollTerminal"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:background="@drawable/bg_terminal_box"
+            android:padding="8dp"
+            android:scrollbars="vertical">
+
+            <TextView
+                android:id="@+id/txtTerminalLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:text=">> SERVER CONNECTED\n>> SCANNING XAUUSD (M15)...\n>> ALGO: OMNISHADOW V4 ACTIVE"
+                android:textColor="#10B981"
+                android:textSize="10sp"
+                android:lineSpacingExtra="3dp" />
+        </ScrollView>
+
+        <!-- Footer Indicator -->
+        <TextView
+            android:id="@+id/txtFooterServer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="🟢 Server: JustMarkets-Demo #1200556246"
+            android:textColor="#94A3B8"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <!-- FLOATING DRAGGABLE BUBBLE -->
+    <FrameLayout
+        android:id="@+id/bubbleContainer"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:background="@drawable/bg_floating_bubble"
+        android:padding="3dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/bubbleAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/heist_icon"
+            android:scaleType="centerCrop"
+            android:contentDescription="Money Heist Bot" />
+
+        <View
+            android:id="@+id/bubbleDot"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="top|end"
+            android:background="@drawable/bg_floating_bubble" />
+    </FrameLayout>
+
+</FrameLayout>
