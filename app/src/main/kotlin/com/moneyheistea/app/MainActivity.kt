@@ -5,8 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
+import android.webkit.JavascriptInterface
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
@@ -19,6 +22,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -47,6 +51,17 @@ class MainActivity : AppCompatActivity() {
             filePathCallback?.onReceiveValue(null)
         }
         filePathCallback = null
+    }
+
+    private val overlayPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this)) {
+            startFloatingService(currentUrl)
+            Toast.makeText(this, "Money Heist Floating Bot Activated! 🎭", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Display over other apps permission required for floating bot", Toast.LENGTH_LONG).show()
+        }
     }
 
     private val prefs by lazy {
@@ -103,6 +118,7 @@ class MainActivity : AppCompatActivity() {
         settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
         settings.userAgentString = settings.userAgentString + " MoneyHeistEA-AndroidApp/1.0"
         webView.overScrollMode = View.OVER_SCROLL_NEVER
+        webView.addJavascriptInterface(WebAppInterface(this), "AndroidApp")
 
         webView.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -227,5 +243,79 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        val tab = intent?.getStringExtra("navigate_tab")
+        if (!tab.isNullOrEmpty()) {
+            webView.evaluateJavascript("if (typeof switchTab === 'function') switchTab('$tab');", null)
+        }
+    }
+
+    fun isOverlayPermissionGranted(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Settings.canDrawOverlays(this)
+        } else {
+            true
+        }
+    }
+
+    fun checkAndRequestOverlayPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            val intent = Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:$packageName")
+            )
+            overlayPermissionLauncher.launch(intent)
+        }
+    }
+
+    fun startFloatingService(serverUrl: String) {
+        if (!isOverlayPermissionGranted()) {
+            checkAndRequestOverlayPermission()
+            return
+        }
+        val intent = Intent(this, FloatingOverlayService::class.java).apply {
+            putExtra("server_url", serverUrl)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent)
+        } else {
+            startService(intent)
+        }
+    }
+
+    fun stopFloatingService() {
+        stopService(Intent(this, FloatingOverlayService::class.java))
+    }
+
+    inner class WebAppInterface(private val activity: MainActivity) {
+        @JavascriptInterface
+        fun startFloatingBot(serverUrl: String?) {
+            activity.runOnUiThread {
+                activity.startFloatingService(serverUrl ?: currentUrl)
+            }
+        }
+
+        @JavascriptInterface
+        fun stopFloatingBot() {
+            activity.runOnUiThread {
+                activity.stopFloatingService()
+            }
+        }
+
+        @JavascriptInterface
+        fun isOverlayGranted(): Boolean {
+            return activity.isOverlayPermissionGranted()
+        }
+
+        @JavascriptInterface
+        fun requestOverlay() {
+            activity.runOnUiThread {
+                activity.checkAndRequestOverlayPermission()
+            }
+        }
     }
 }
