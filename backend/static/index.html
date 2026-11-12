@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MONEY HEIST EA | Mobile Cloud Trading Bot</title>
+  <link rel="icon" type="image/jpeg" href="/static/money_heist.jpg">
+  <link rel="apple-touch-icon" href="/static/money_heist.jpg">
+  <link rel="manifest" href="/static/manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css?v=20261113_01">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="mobile-app-body">
+  <div class="app-viewport">
+    
+    <!-- AMBIENT CYBER CANDLESTICKS BACKGROUND VIDEO -->
+    <div class="video-bg-container">
+      <video id="bgVideoPlayer" autoplay muted loop playsinline preload="auto">
+        <source src="/static/bg_candlesticks.mp4" type="video/mp4">
+      </video>
+      <div class="video-bg-overlay"></div>
+    </div>
+
+    <!-- TOP MOBILE STATUS & HEADER (EXACT REFERENCE UI) -->
+    <header class="app-topbar-exact">
+      <button class="topbar-hamburger-btn" id="topbarHamburgerBtn" aria-label="Open Menu" type="button">
+        <i data-lucide="menu"></i>
+      </button>
+
+      <div class="brand-capsule-exact">
+        <span>MONEY HEIST EA</span>
+      </div>
+
+      <div class="mt5-pill-exact" id="mt5Pill" title="MT5 Status">
+        <span class="pulse-dot-green"></span>
+        <span id="mt5PillText">MT5</span>
+      </div>
+    </header>
+
+    <!-- SLIDE-OUT NAVIGATION DRAWER (HAMBURGER MENU) -->
+    <div class="drawer-backdrop" id="drawerBackdrop"></div>
+    <aside class="hamburger-drawer" id="hamburgerDrawer">
+      <div class="drawer-header">
+        <div class="drawer-brand">
+          <div class="drawer-avatar-glow">
+            <img src="/static/ultra_pro_avatar.jpg" alt="Avatar" id="drawerAvatarImg">
+          </div>
+          <div>
+            <h3>MONEY HEIST EA</h3>
+            <span class="drawer-subtitle">Algorithmic Cloud EA</span>
+          </div>
+        </div>
+        <button class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close Drawer" type="button">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="drawer-body">
+        <!-- MT5 Account Card -->
+        <div class="drawer-section-card">
+          <div class="drawer-card-title">
+            <i data-lucide="shield"></i> <span>MT5 CONNECTION</span>
+          </div>
+          <div class="drawer-stat-row"><span>Account:</span> <strong id="drawerMt5Login">--</strong></div>
+          <div class="drawer-stat-row"><span>Balance:</span> <strong id="drawerMt5Balance">$0.00</strong></div>
+          <div class="drawer-stat-row"><span>Equity:</span> <strong id="drawerMt5Equity">$0.00</strong></div>
+          <div class="drawer-stat-row"><span>Server:</span> <span id="drawerMt5Server">MetaQuotes-Demo</span></div>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="drawer-nav-list">
+          <button class="drawer-nav-item" id="drawerLinkScanner" type="button">
+            <i data-lucide="line-chart"></i>
+            <span>AI Chart Scanner</span>
+            <i data-lucide="chevron-right" class="item-chevron"></i>
+          </button>
+
+          <button class="drawer-nav-item" id="drawerLinkPresets" type="button">
+            <i data-lucide="sliders"></i>
+            <span>Strategy & Risk Presets</span>
+            <i data-lucide="chevron-right" class="item-chevron"></i>
+          </button>
+
+          <button class="drawer-nav-item" id="drawerLinkQuotes" type="button">
+            <i data-lucide="activity"></i>
+            <span>Live Quotes & Bot Console</span>
+            <i data-lucide="chevron-right" class="item-chevron"></i>
+          </button>
+
+          <button class="drawer-nav-item" id="drawerLinkLicense" type="button">
+            <i data-lucide="key"></i>
+            <span>VIP License Key</span>
+            <span class="drawer-badge-vip" id="drawerVipBadge">ACTIVE</span>
+          </button>
+
+          <button class="drawer-nav-item" id="drawerLinkOverlay" type="button">
+            <i data-lucide="layers"></i>
+            <span>Launch Floating Overlay HUD</span>
+            <i data-lucide="external-link" class="item-chevron"></i>
+          </button>
+
+          <button class="drawer-nav-item" id="drawerLinkAvatar" type="button">
+            <i data-lucide="image"></i>
+            <span>Switch Avatar Theme</span>
+            <span class="drawer-badge-opt" id="drawerAvatarCycleName">Dalí / Robot</span>
+          </button>
+        </div>
+
+        <div class="drawer-footer">
+          <span>MONEY HEIST EA v1.0.45</span>
+          <p>Powered by OmniShadow AI Engine</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ================= ONBOARDING / VIP KEY INTRODUCTION GATE ================= -->
+    <section class="onboarding-gate" id="onboardingGate" style="display:none;">
+      <div class="onboard-content">
+        <!-- El Profesor Branding Header -->
+        <div class="onboard-avatar-wrap">
+          <div class="avatar-glow-ring">
+            <img src="/static/money_heist.jpg" alt="Money Heist EA" class="robot-avatar-img">
+            <div class="avatar-cyber-overlay"></div>
+          </div>
+          <span class="onboard-badge">VIP ALGORITHMIC ACCESS</span>
+          <h1 class="onboard-title">MONEY <span class="logo-gold">HEIST</span> <span class="ea-badge">EA</span></h1>
+          <p class="onboard-subtitle">Cloud Auto-Scalper Engine • El Profesor</p>
+        </div>
+
+        <!-- THE SIGNATURE "ADD A NEW ROBOT" CARD (Matching Reference Image) -->
+        <div class="onboard-robot-card" id="onboardAddRobotCard">
+          <div class="onboard-icon-circle">
+            <i data-lucide="plus"></i>
+          </div>
+          <div class="onboard-card-body">
+            <h3>Add a new robot</h3>
+            <p>Be having a new licence key</p>
+          </div>
+          <div class="onboard-card-status">
+            <i data-lucide="key-round" style="width:18px;height:18px;color:#fde68a;"></i>
+          </div>
+        </div>
+
+        <!-- ACTIVATION FORM PANEL -->
+        <div class="onboard-form-card" id="onboardFormCard">
+          <div class="onboard-account-pill">
+            <i data-lucide="shield-check" style="color:var(--green-primary);width:16px;height:16px;"></i>
+            <span>Locking to MT5: <strong id="onboardMt5AccountText" class="text-gold">Detecting...</strong></span>
+          </div>
+
+          <label class="onboard-input-label">
+            <span>VIP LICENSE KEY</span>
+            <div class="input-with-button">
+              <input type="text" id="onboardKeyInput" placeholder="HEIST-VIP30-XXXX-XXXX" style="text-transform:uppercase;">
+              <button class="inner-paste-btn" id="onboardPasteBtn" type="button" title="Paste from clipboard">
+                <i data-lucide="clipboard"></i>
+              </button>
+            </div>
+          </label>
+
+          <!-- Fallback manual MT5 Account input if MT5 is closed -->
+          <label class="onboard-input-label" id="onboardManualAccountRow" style="display:none;margin-top:10px;">
+            <span>MT5 ACCOUNT NUMBER (IF TERMINAL CLOSED)</span>
+            <input type="text" id="onboardManualAccountInput" placeholder="e.g. 1200556246" style="margin-top:4px;">
+          </label>
+
+          <!-- Fast demo keys for testing -->
+          <div class="key-hint-box" style="margin:12px 0 16px 0;">
+            <span>Instant Demo Keys:</span>
+            <div class="quick-key-tags">
+              <button type="button" class="key-tag onboard-demo-tag" data-key="HEIST-VIP-PROFESOR-2026">Profesor Lifetime VIP</button>
+              <button type="button" class="key-tag onboard-demo-tag" data-key="HEIST-TRIAL-DEMO-2026">7-Day Trial Key</button>
+            </div>
+          </div>
+
+          <button id="onboardActivateBtn" class="primary-btn-red full-width" type="button">
+            <i data-lucide="zap" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-right:6px;"></i>
+            ACTIVATE ROBOT VIP
+          </button>
+          <div id="onboardFeedback" class="exec-feedback"></div>
+        </div>
+
+        <!-- Optional preview link -->
+        <div class="onboard-preview-row">
+          <button class="text-btn text-muted" id="onboardPreviewBtn" type="button">
+            <i data-lucide="eye" style="width:13px;height:13px;display:inline-block;vertical-align:middle;margin-right:4px;"></i>
+            Explore in Demo Preview Mode
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN SCROLLABLE APP CONTENT -->
+    <main class="app-scroll-content">
+
+      <!-- ================= TAB 1: HOME ================= -->
+            <!-- ================= TAB 1: HOME (EXACT REFERENCE UI) ================= -->
+      <section class="tab-page active" id="tabHome">
+        
+        <!-- EXACT HERO ROBOT AVATAR SECTION -->
+        <div class="exact-hero-container">
+          <div class="exact-avatar-circle" id="heroAvatarContainer" title="Tap to switch avatar style">
+            <img src="/static/ultra_pro_avatar.jpg" alt="Money Heist Robot" class="exact-avatar-img" id="heroRobotAvatar">
+            <div class="avatar-cyber-overlay"></div>
+          </div>
+          <div class="exact-hero-signature" id="heroCreatorTitle">~ El Profesor</div>
+        </div>
+
+        <!-- EXACT 3 ACTION PILL BUTTONS (Quotes | Trade | Remove) -->
+        <div class="exact-action-pills-row">
+          <button class="exact-pill-btn quotes" id="quickQuotesBtn" title="Quotes & Live Console" type="button">
+            <i data-lucide="trending-up"></i>
+            <span>Quotes</span>
+          </button>
+
+          <button class="exact-pill-btn trade start" id="mainStartStopBtn" title="Trade Engine Toggle" type="button">
+            <i data-lucide="play" id="mainPlayIcon"></i>
+            <span id="mainStartStopText">Trade</span>
+          </button>
+
+          <button class="exact-pill-btn remove" id="removeBotBtn" title="Remove / Stop Bot" type="button">
+            <i data-lucide="trash-2"></i>
+            <span>Remove</span>
+          </button>
+        </div>
+
+        <!-- EXACT SECTION TITLE: CONNECTED ROBOTS: -->
+        <div class="exact-section-title-wrap">
+          <h2 class="exact-section-title">CONNECTED ROBOTS:</h2>
+        </div>
+
+        <!-- EXACT 3 CAPSULE CARDS -->
+        <div class="exact-capsule-stack">
+          <!-- CARD 1: ACTIVE ROBOT CARD -->
+          <div class="exact-capsule-card" id="cardConnectedRobot" role="button" tabindex="0">
+            <div class="exact-card-badge avatar-badge">
+              <img src="/static/ultra_pro_avatar.jpg" alt="Robot Icon" class="exact-badge-thumb" id="cardRobotThumb">
+            </div>
+            <div class="exact-card-info">
+              <h3 class="exact-card-title" id="heroRobotName">Money Heist EA</h3>
+              <p class="exact-card-desc"><span class="exact-status-indicator"></span>Active • Multi-Asset Scalper</p>
+            </div>
+            <div class="exact-card-arrow">
+              <i data-lucide="chevron-right"></i>
+            </div>
+          </div>
+
+          <!-- CARD 2: CHART SCANNER CARD -->
+          <div class="exact-capsule-card" id="cardChartScanner" role="button" tabindex="0">
+            <div class="exact-card-badge scanner-badge">
+              <i data-lucide="activity"></i>
+            </div>
+            <div class="exact-card-info">
+              <h3 class="exact-card-title">CHART SCANNER</h3>
+              <p class="exact-card-desc">Scan charts with AI</p>
+            </div>
+            <div class="exact-card-arrow">
+              <i data-lucide="chevron-right"></i>
+            </div>
+          </div>
+
+          <!-- CARD 3: ADD KEYS CARD -->
+          <div class="exact-capsule-card" id="addNewRobotBtn" role="button" tabindex="0">
+            <div class="exact-card-badge add-badge">
+              <i data-lucide="plus"></i>
+            </div>
+            <div class="exact-card-info">
+              <h3 class="exact-card-title">ADD KEYS</h3>
+              <p class="exact-card-desc">Have a valid License Key</p>
+            </div>
+            <div class="exact-card-arrow">
+              <i data-lucide="chevron-right"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden elements to preserve JS compatibility for terminal/license polling -->
+        <div style="display:none;" aria-hidden="true">
+          <div id="licenseStatusStrip">
+            <span id="licPulseDot"></span>
+            <span id="licStatusText">VIP Active</span>
+            <button id="stripActionBtn"></button>
+          </div>
+          <span id="activeRobotsCount">1 ACTIVE</span>
+          <div id="dynamicRobotList"></div>
+          <span id="newsCountdown">AUTO-FILTER: ACTIVE</span>
+          <div id="botLogsContainer"></div>
+          <button id="clearBotLogsBtn"></button>
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 2: AI CHART SCREENSHOT SCANNER (EA CONVERTER STYLE) ================= -->
+      <section class="tab-page" id="tabScanner">
+        <button class="scanner-back-bar" id="scannerBackToHomeBtn" type="button">
+          <i data-lucide="arrow-left"></i>
+          <span>BACK TO ROBOTS</span>
+        </button>
+        <div class="chart-scanner-header">
+          <div class="cs-title-group">
+            <i data-lucide="scan" class="cs-header-icon"></i>
+            <h2>CHART SCANNER</h2>
+          </div>
+          <button class="cs-reset-btn" id="resetScannerBtn" title="Reset Scanner">
+            <i data-lucide="rotate-ccw"></i>
+          </button>
+        </div>
+
+        <p class="cs-subtitle">Drop your chart screenshot from MetaTrader or TradingView to analyze</p>
+
+        <!-- SYMBOL INPUT -->
+        <div class="cs-symbol-bar">
+          <label for="scannerSymbolInput">SCANNING SYMBOL</label>
+          <div class="cs-symbol-input-wrap">
+            <i data-lucide="search"></i>
+            <input type="text" id="scannerSymbolInput" placeholder="e.g. EURUSD, XAUUSD, US30" value="XAUUSD">
+          </div>
+        </div>
+
+        <!-- UPLOAD / DROP ZONE -->
+        <label for="csFileInput" class="cs-dropzone" id="csDropZone" style="cursor:pointer;display:block;">
+          <input type="file" id="csFileInput" accept="image/*" style="opacity:0;position:absolute;width:1px;height:1px;pointer-events:none;">
+          <div class="cs-dropzone-inner" id="csDropPrompt">
+            <div class="cs-upload-icon-circle">
+              <i data-lucide="upload-cloud"></i>
+            </div>
+            <h4>Drop your chart screenshot</h4>
+            <p>or tap to browse / take photo</p>
+            <span class="cs-file-hint">Supports TradingView, MT4 & MT5 charts (PNG, JPG, WEBP)</span>
+          </div>
+
+          <!-- Thumbnail preview container -->
+          <div class="cs-preview-wrap" id="csPreviewWrap" style="display:none;">
+            <img id="csPreviewImg" src="" alt="Chart Preview">
+            <button class="cs-remove-img-btn" id="csRemoveImgBtn" type="button"><i data-lucide="x"></i></button>
+          </div>
+        </label>
+
+        <!-- ANIMATED SCANNING PIPELINE CARD (Shown during analysis) -->
+        <div class="cs-analyzing-card" id="csAnalyzingCard" style="display:none;">
+          <div class="cs-analyzing-header">
+            <div class="cs-analyzing-pulse"></div>
+            <span>ANALYZING CHART</span>
+          </div>
+          <div class="cs-checklist">
+            <div class="cs-check-item" id="chkCandles">
+              <div class="cs-check-dot"></div>
+              <span>DETECTING CANDLES</span>
+            </div>
+            <div class="cs-check-item" id="chkStructure">
+              <div class="cs-check-dot"></div>
+              <span>READING STRUCTURE</span>
+            </div>
+            <div class="cs-check-item" id="chkLevels">
+              <div class="cs-check-dot"></div>
+              <span>FINDING LEVELS</span>
+            </div>
+            <div class="cs-check-item" id="chkSignal">
+              <div class="cs-check-dot"></div>
+              <span>BUILDING SIGNAL</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCANNER RESULT CARD (Exact match to Frame 00:04) -->
+        <div class="cs-result-card" id="csResultCard" style="display:none;">
+          <div class="cs-result-header">
+            <span class="cs-timer-badge">
+              <i data-lucide="clock" style="width:12px;height:12px;"></i>
+              <span id="csTimerText">SIGNAL FRESH FOR 14:59</span>
+            </span>
+          </div>
+
+          <!-- Narrative AI summary -->
+          <p class="cs-summary-text" id="csSummaryText"></p>
+
+          <!-- Dual Sentiment Bar (Bullish vs Bearish) -->
+          <div class="cs-sentiment-wrap">
+            <div class="cs-sentiment-bar">
+              <div class="cs-bar-bull" id="csBarBull" style="width:36%;"></div>
+              <div class="cs-bar-bear" id="csBarBear" style="width:64%;"></div>
+            </div>
+            <div class="cs-sentiment-labels">
+              <span class="cs-label-bull" id="csLabelBull">36% bullish</span>
+              <span class="cs-label-bear" id="csLabelBear">64% bearish</span>
+            </div>
+          </div>
+
+          <!-- 4 Core Metrics Grid -->
+          <div class="cs-metrics-grid">
+            <div class="cs-metric-box">
+              <span class="cs-m-title">BIAS</span>
+              <span class="cs-m-val red" id="csMetricBias">Bearish</span>
+            </div>
+            <div class="cs-metric-box">
+              <span class="cs-m-title">STRUCTURE</span>
+              <span class="cs-m-val cyan" id="csMetricStructure">Uptrend</span>
+            </div>
+            <div class="cs-metric-box">
+              <span class="cs-m-title">VOLATILITY</span>
+              <span class="cs-m-val gold" id="csMetricVolatility">Moderate</span>
+            </div>
+            <div class="cs-metric-box">
+              <span class="cs-m-title">MOMENTUM</span>
+              <span class="cs-m-val red" id="csMetricMomentum">Weakening</span>
+            </div>
+          </div>
+
+          <!-- Auto-Detected Box -->
+          <div class="cs-autodetect-box">
+            <div class="cs-ad-row">
+              <span class="cs-ad-lbl">AUTO-DETECTED</span>
+              <span class="cs-ad-badge" id="csAutoSymbol">XAUUSD</span>
+            </div>
+            <div class="cs-ad-levels">
+              <span class="cs-ad-sub">SL / TP:</span>
+              <span class="cs-ad-pips" id="csAutoSLTP">43 pips / 51 pips</span>
+            </div>
+          </div>
+
+          <!-- Big Action Button (Exact from Frame 00:04) -->
+          <button class="cs-confirm-trade-btn sell" id="csConfirmTradeBtn" type="button">
+            <i data-lucide="trending-down" id="csTradeActionIcon"></i>
+            <span id="csTradeActionText">CONFIRM SELL TRADE</span>
+          </button>
+
+          <p class="cs-disclaimer">Descriptive chart diagnostics only — trade with proper risk management.</p>
+        </div>
+      </section>
+
+      <!-- ================= TAB 3: METATRADER ================= -->
+      <section class="tab-page" id="tabMetaTrader">
+
+        <!-- LINK BROKER ACCOUNT CARD (Exact Match to User Reference Screenshot) -->
+        <div class="mt-link-card">
+          <!-- Top Platform Tabs -->
+          <div class="mt-platform-tabs">
+            <button type="button" class="mt-platform-tab active" id="tabSelectMT5">MT5 ACCOUNT</button>
+            <button type="button" class="mt-platform-tab" id="tabSelectMT4">MT4 ACCOUNT</button>
+          </div>
+          <div class="mt-tab-indicator-bar">
+            <div class="mt-tab-indicator-line" id="mtTabIndicatorLine"></div>
+          </div>
+
+          <!-- Title with Red Dot Indicator -->
+          <div class="mt-login-header">
+            <span class="mt-red-dot"></span>
+            <h3 id="mtPlatformTitle">MT5 LOGIN DETAILS</h3>
+          </div>
+
+          <!-- Form Fields with Notched Floating Labels -->
+          <div class="mt-link-form">
+            <div class="notched-input-group">
+              <label for="mtLinkLogin">Login</label>
+              <input type="number" id="mtLinkLogin" placeholder="30000000" style="font-family:var(--font-mono);">
+            </div>
+
+            <div class="notched-input-group">
+              <label for="mtLinkPassword">Password</label>
+              <input type="password" id="mtLinkPassword" placeholder="Password">
+            </div>
+
+            <div class="notched-input-group">
+              <label for="mtLinkServer">Server</label>
+              <input type="text" id="mtLinkServer" placeholder="e.g. JustMarkets-Demo, Exness-Real">
+            </div>
+
+            <button type="button" class="mt-link-btn" id="mtLinkSubmitBtn">
+              <span id="mtLinkBtnText">LINK MT5 ACCOUNT DETAILS</span>
+            </button>
+
+            <div id="mtLinkFeedback" class="exec-feedback" style="display:none;margin-top:12px;"></div>
+          </div>
+        </div>
+
+        <!-- Account Overview Card -->
+        <div class="account-overview-card">
+          <div class="acc-header-row">
+            <span class="acc-server" id="mtAccountServer">Broker: JustMarkets</span>
+            <span class="acc-type-badge">LIVE CONNECTED</span>
+          </div>
+          <div class="acc-balance-block">
+            <span class="acc-label">ACCOUNT BALANCE</span>
+            <h1 class="acc-balance-val" id="mtBalanceVal">$0.00</h1>
+          </div>
+          <div class="acc-metrics-grid">
+            <div class="acc-metric">
+              <span class="m-label">EQUITY</span>
+              <span class="m-val text-green" id="mtEquityVal">$0.00</span>
+            </div>
+            <div class="acc-metric">
+              <span class="m-label">FLOATING P&L</span>
+              <span class="m-val" id="mtProfitVal">$0.00</span>
+            </div>
+            <div class="acc-metric">
+              <span class="m-label">ACCOUNT #</span>
+              <span class="m-val text-gold" id="mtLoginVal">--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Open Positions Section -->
+        <div class="section-container">
+          <div class="section-title-row">
+            <h3>ACTIVE OPEN TRADES</h3>
+            <button class="text-btn" id="refreshPositionsBtnMobile">Refresh</button>
+          </div>
+          <div class="open-trades-list" id="mobilePositionsList">
+            <div class="empty-trades-card">
+              <i data-lucide="check-circle-2"></i>
+              <p>No active positions open. Bot is scanning for fresh setups.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 4: SETTINGS ================= -->
+      <section class="tab-page" id="tabSettings">
+        <div class="settings-group">
+          <h3>BOT RISK PARAMETERS</h3>
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4>Fixed Lot Size</h4>
+              <p>Trading volume per execution</p>
+            </div>
+            <input type="number" id="settingsLotInput" value="0.01" step="0.01" min="0.01" class="mobile-input-small">
+          </div>
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4>Max Concurrent Trades</h4>
+              <p>Maximum open positions at once</p>
+            </div>
+            <input type="number" id="settingsMaxTradesInput" value="2" min="1" max="10" class="mobile-input-small">
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3>VIP LICENSE & HOSTING</h3>
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4>Active License</h4>
+              <p id="currentLicenseText">Checking active license...</p>
+            </div>
+            <span class="badge-gold" id="currentLicenseBadge">STATUS</span>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4>Bound MT5 Account</h4>
+              <p id="boundAccountText">--</p>
+            </div>
+            <span class="badge" id="licenseDaysLeftBadge">--</span>
+          </div>
+          <button class="secondary-btn full-width" id="addKeyBtnSettings">
+            <i data-lucide="key"></i>
+            <span>Add / Renew License Key</span>
+          </button>
+        </div>
+
+        <div class="settings-group">
+          <h3>APP VERSION & CREDITS</h3>
+          <div class="credits-card">
+            <p><strong>MONEY HEIST EA v2.0</strong></p>
+            <p>Engine: OmniShadow Universal Suite (Pine Script v5)</p>
+            <p>Direct MT5 Local/Cloud Gateway Architecture</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- BOTTOM APP NAVIGATION BAR (Exact from Screenshots) -->
+    <nav class="app-bottom-nav">
+      <button class="nav-tab-item active" data-tab="tabHome">
+        <i data-lucide="home"></i>
+        <span>HOME</span>
+      </button>
+
+      <button class="nav-tab-item" data-tab="tabScanner">
+        <i data-lucide="scan"></i>
+        <span>SCANNER</span>
+      </button>
+
+      <button class="nav-tab-item" data-tab="tabMetaTrader">
+        <i data-lucide="wallet"></i>
+        <span>META TRADER</span>
+      </button>
+
+      <button class="nav-tab-item" data-tab="tabSettings">
+        <i data-lucide="settings"></i>
+        <span>SETTINGS</span>
+      </button>
+    </nav>
+
+    <!-- FLOATING BOT STATUS BUBBLE (Exact match to reference video ports) -->
+    <div class="floating-bot-bubble status-off" id="floatingBotBubble" title="Bot Quotes & Status">
+      <div class="bubble-ring" id="bubbleRing">
+        <img src="/static/money_heist.jpg" alt="Bot Status" class="bubble-avatar-img">
+        <span class="bubble-status-dot" id="bubbleStatusDot"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- QUOTES BOT CONSOLE MODAL (Exact match to reference video ports) -->
+  <div class="modal-backdrop" id="quotesConsoleModal">
+    <div class="modal-content modal-mobile quotes-console-card">
+      <div class="modal-header">
+        <div class="quotes-header-title">
+          <i data-lucide="activity" style="color:var(--gold-primary);width:18px;height:18px;"></i>
+          <span>QUOTES & BOT STATUS</span>
+        </div>
+        <button class="modal-close" id="quotesModalCloseBtn" type="button"><i data-lucide="x"></i></button>
+      </div>
+
+      <div class="quotes-modal-body">
+        <!-- TOP CIRCLE / SQUIRCLE ICON WITH PULSING HALO -->
+        <div class="quotes-avatar-wrap">
+          <div class="quotes-avatar-ring status-off" id="quotesAvatarRing">
+            <img src="/static/money_heist.jpg" alt="Bot Mask" class="quotes-avatar-img" id="quotesAvatarImg">
+            <div class="quotes-pulse-wave"></div>
+          </div>
+          
+          <div class="quotes-status-pill status-off" id="quotesStatusPill">
+            <span class="status-dot"></span>
+            <span id="quotesStatusText">ENGINE OFF</span>
+          </div>
+
+          <h2 class="quotes-bot-name">MONEY HEIST EA</h2>
+          <p class="quotes-bot-sub">OMNISHADOW V4 HIGH-FREQUENCY ALGO</p>
+        </div>
+
+        <!-- QUICK CONTROL PILLS -->
+        <div class="quotes-pills-row">
+          <button class="quotes-action-pill" id="quotesPillScript" type="button">
+            <i data-lucide="file-code-2"></i>
+            <span>SCRIPT</span>
+          </button>
+          <button class="quotes-action-pill" id="quotesPillLive" type="button">
+            <i data-lucide="trending-up"></i>
+            <span>LIVE MT5</span>
+          </button>
+          <button class="quotes-action-pill stop-ea" id="quotesPillToggle" type="button">
+            <i data-lucide="play" id="quotesPillToggleIcon"></i>
+            <span id="quotesPillToggleText">START EA</span>
+          </button>
+        </div>
+
+        <!-- LIVE STREAMING TERMINAL CONSOLE -->
+        <div class="quotes-terminal-box">
+          <div class="terminal-bar">
+            <div class="terminal-dots">
+              <span class="t-dot red"></span>
+              <span class="t-dot yellow"></span>
+              <span class="t-dot green"></span>
+            </div>
+            <span class="terminal-title">LIVE EXECUTION FEED</span>
+            <span class="terminal-badge" id="terminalStateBadge">IDLE</span>
+          </div>
+          <div class="terminal-log-content" id="quotesTerminalLogs">
+            <div class="t-line t-system">> Initializing OmniShadow Engine...</div>
+            <div class="t-line t-system">> Connected to MT5 Account #1200556246</div>
+            <div class="t-line t-dim">> Press START to begin scanning markets.</div>
+          </div>
+        </div>
+
+        <!-- FOOTER STATUS -->
+        <div class="quotes-footer-bar">
+          <span class="server-status-pill" id="quotesServerStatusPill">
+            <span class="pulse-dot green"></span>
+            <span id="quotesServerText">SERVER CONNECTED (JustMarkets-Demo)</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LICENSE KEY MODAL -->
+  <div class="modal-backdrop" id="licenseModal">
+    <div class="modal-content modal-small">
+      <div class="modal-header">
+        <div class="brand-text">
+          <h3 style="display:flex;align-items:center;gap:8px;">
+            <i data-lucide="key-round" style="color:var(--gold-primary);width:20px;height:20px;"></i>
+            VIP License Activation
+          </h3>
+        </div>
+        <button class="modal-close" id="licenseModalCloseBtn"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body form-body">
+        
+        <div class="modal-account-pill">
+          <i data-lucide="shield-check" style="color:var(--green-primary);width:16px;height:16px;"></i>
+          <span>Locking to MT5 Account: <strong id="modalMt5Account" class="text-gold">Detecting...</strong></span>
+        </div>
+
+        <p style="font-size:12px;color:var(--text-muted);">
+          Enter your VIP license key to activate automated trading algorithms for this account.
+        </p>
+
+        <label>VIP License Key
+          <div class="input-with-button">
+            <input type="text" id="licenseKeyInput" placeholder="e.g. HEIST-VIP30-XXXX-XXXX" style="text-transform:uppercase;">
+            <button class="inner-paste-btn" id="pasteKeyBtn" type="button" title="Paste from clipboard">
+              <i data-lucide="clipboard"></i>
+            </button>
+          </div>
+        </label>
+
+        <!-- Fallback manual MT5 Account input if MT5 is closed or on mobile/VPS -->
+        <label id="manualAccountRow" style="display:none;margin-top:8px;">MT5 Account Number (if MT5 is closed)
+          <input type="text" id="manualAccountInput" placeholder="e.g. 1200556246" style="margin-top:4px;">
+        </label>
+
+        <!-- Starter demo hint -->
+        <div class="key-hint-box">
+          <span>Demo Keys available:</span>
+          <div class="quick-key-tags">
+            <button class="key-tag" data-key="HEIST-VIP-PROFESOR-2026">Profesor Lifetime VIP</button>
+            <button class="key-tag" data-key="HEIST-TRIAL-DEMO-2026">7-Day Trial Key</button>
+          </div>
+        </div>
+
+        <button id="activateLicenseBtn" class="primary-btn-red full-width">Activate Robot VIP</button>
+        <div id="licenseFeedback" class="exec-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSPECT PAIR MODAL -->
+  <div class="modal-backdrop" id="inspectModal">
+    <div class="modal-content modal-mobile">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h2 id="inspectSymbol">XAUUSD</h2>
+          <span class="badge" id="inspectBadge">STATUS</span>
+        </div>
+        <button class="modal-close" id="inspectModalCloseBtn"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <!-- Levels -->
+        <div class="mobile-levels-row">
+          <div class="m-level-box">
+            <span class="lbl">ENTRY</span>
+            <span class="val" id="inspectEntry">--</span>
+          </div>
+          <div class="m-level-box red">
+            <span class="lbl">STOP LOSS</span>
+            <span class="val" id="inspectSL">--</span>
+          </div>
+          <div class="m-level-box green">
+            <span class="lbl">TP1 (100%)</span>
+            <span class="val" id="inspectTP1">--</span>
+          </div>
+          <div class="m-level-box gold">
+            <span class="lbl">R:R</span>
+            <span class="val" id="inspectRR">--</span>
+          </div>
+        </div>
+
+        <!-- One-Click Execution on Mobile -->
+        <div class="mobile-trade-actions">
+          <button class="exec-btn buy" id="mobileExecBuyBtn">EXECUTE BUY IN MT5</button>
+          <button class="exec-btn sell" id="mobileExecSellBtn">EXECUTE SELL IN MT5</button>
+        </div>
+        <div class="exec-feedback" id="mobileExecFeedback"></div>
+
+        <!-- TV Chart -->
+        <div class="chart-embed-wrapper-mobile">
+          <div id="tradingview_widget_mobile" class="tv-container-mobile"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROBOT CONFIG & PRESETS MODAL (STEP 3) -->
+  <div class="modal-backdrop" id="robotConfigModal">
+    <div class="modal-content modal-mobile">
+      <div class="modal-header">
+        <div class="brand-text">
+          <h3 style="display:flex;align-items:center;gap:8px;">
+            <i data-lucide="sliders" style="color:var(--gold-primary);width:20px;height:20px;"></i>
+            Robot Strategy & Risk Presets
+          </h3>
+        </div>
+        <button class="modal-close" id="robotConfigModalCloseBtn"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body form-body">
+        
+        <div class="robot-config-hero">
+          <img src="/static/money_heist.jpg" class="config-hero-img" id="configRobotImg">
+          <div class="config-hero-text">
+            <h4 id="configRobotName">Money Heist EA</h4>
+            <p id="configRobotTagline">OmniShadow AI Engine • Universal Multi-Asset Scalper</p>
+            <span class="pairs-badge" id="configRobotSymbols">Pairs: XAUUSD, GBPUSD, USDJPY, EURUSD</span>
+          </div>
+        </div>
+
+        <div class="gen-form-grid">
+          <label>Trading Preset Mode
+            <select id="configRiskModeSelect" class="mobile-select">
+              <option value="STANDARD">Standard Heist (Fixed Lot + TP1)</option>
+              <option value="PROP_FIRM">Prop Firm Safe Guard (1% Risk Cap + 1:1.8 R:R)</option>
+              <option value="AGGRESSIVE">Aggressive Heist (TP2 / 127% Fibonacci Ext)</option>
+            </select>
+          </label>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4>Fixed Lot Size</h4>
+              <p>Base execution volume</p>
+            </div>
+            <input type="number" id="configLotInput" value="0.01" step="0.01" min="0.01" class="mobile-input-small">
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4>Auto-Lot Dynamic Compounding</h4>
+              <p>Calculates 1% account risk automatically</p>
+            </div>
+            <input type="checkbox" id="configAutoLotCheck" style="width:20px;height:20px;accent-color:var(--red-primary);">
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4>Min Risk:Reward Filter</h4>
+              <p>Rejects setups below this ratio</p>
+            </div>
+            <input type="number" id="configMinRRInput" value="1.3" step="0.1" min="1.0" max="5.0" class="mobile-input-small">
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4>Take Profit Target</h4>
+              <p>Fibonacci extension target</p>
+            </div>
+            <select id="configTpTargetSelect" class="mobile-select-inline" style="background:#08090d;border:1px solid var(--border-color);color:#fff;padding:6px;border-radius:6px;">
+              <option value="TP1">TP1 (100% Fib Base)</option>
+              <option value="TP2">TP2 (127% Extension)</option>
+              <option value="TP3">TP3 (168% Extension)</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="saveRobotConfigBtn" class="primary-btn-red full-width" style="margin-top:10px;">Save Preset Settings</button>
+        <div id="robotConfigFeedback" class="exec-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIRM TRADE MODAL (Exact match to Frame 00:05 in video) -->
+  <div class="modal-backdrop" id="csConfirmModal">
+    <div class="modal-content modal-mobile cs-confirm-dialog">
+      <div class="modal-header">
+        <div class="cs-dialog-banner sell" id="csDialogBanner">
+          <i data-lucide="trending-down" id="csDialogIcon"></i>
+          <span id="csDialogBannerText">SELL • STRONG • 74% CONF</span>
+        </div>
+        <button class="modal-close" id="csConfirmModalCloseBtn" type="button"><i data-lucide="x"></i></button>
+      </div>
+
+      <div class="modal-body form-body">
+        <label>SYMBOL
+          <input type="text" id="csExecSymbol" value="XAUUSD" style="text-transform:uppercase;font-weight:700;">
+        </label>
+
+        <div class="form-row-2">
+          <label>LOT SIZE
+            <input type="number" id="csExecLot" value="0.01" step="0.01" min="0.01">
+          </label>
+          <label>NUMBER OF TRADES
+            <input type="number" id="csExecTrades" value="1" min="1" max="100">
+          </label>
+        </div>
+
+        <div class="platform-selector-row">
+          <label>PLATFORM</label>
+          <div class="platform-pills">
+            <button type="button" class="plat-pill disabled" title="Not configured">MT4 (not configured)</button>
+            <button type="button" class="plat-pill active">MT5</button>
+          </div>
+        </div>
+
+        <div id="csExecFeedback" class="exec-feedback" style="display:none;"></div>
+
+        <div class="modal-action-row">
+          <button type="button" class="modal-cancel-btn" id="csCancelBtn">CANCEL</button>
+          <button type="button" class="primary-btn-red" id="csExecuteBtn">
+            <i data-lucide="zap" style="width:16px;height:16px;"></i>
+            <span id="csExecuteBtnText">EXECUTE</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Chime -->
+  <audio id="alertChime" preload="auto">
+    <source src="https://cdn.freesound.org/previews/536/536108_11861866-lq.mp3" type="audio/mpeg">
+  </audio>
+
+  <script src="/static/app.js?v=20261113_01"></script>
+</body>
+</html>
